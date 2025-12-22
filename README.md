@@ -1,2 +1,2 @@
 # MealLabApp
-This is the MealLab App Gui
+This is the MealLab App 
