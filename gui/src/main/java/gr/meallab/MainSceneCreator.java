@@ -1,4 +1,4 @@
-package gr.meallab.GUI;
+package gr.meallab;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;

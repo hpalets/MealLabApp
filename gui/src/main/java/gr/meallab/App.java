@@ -12,16 +12,20 @@ public class App extends Application {
 
         @Override
         public void start(Stage stage) {
-            this.primaryStage = stage;
-            stage.setTitle("Meal Lab App");
+            try{
+                this.primaryStage = stage;
+                stage.setTitle("Meal Lab App");
 
 
-            MainSceneCreator mainSceneCreator=  new MainSceneCreator();
-    	    mainScene = mainSceneCreator.createScene();
-    	
+                MainSceneCreator mainSceneCreator=  new MainSceneCreator();
+                mainScene = mainSceneCreator.createScene();
+            
 
-            primaryStage.setScene(mainScene);
-            primaryStage.show();
+                primaryStage.setScene(mainScene);
+                primaryStage.show();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
         }
 
         //Method for changing scenes

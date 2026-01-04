@@ -1,4 +1,4 @@
-package gr.meallab.GUI;
+package gr.meallab;
 
 import gr.meallab.model.Meal;
 import gr.meallab.model.MealSummary;
