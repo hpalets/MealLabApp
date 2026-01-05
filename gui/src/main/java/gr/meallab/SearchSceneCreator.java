@@ -26,16 +26,27 @@ public class SearchSceneCreator {
         );
         searchTypeChoice.setValue("1 - Αναζήτηση με υλικό");
 
+        //Text Field for search input
         TextField searchField = new TextField();
         searchField.setPromptText("GIVE INPUT (Ingredient or Name)");
 
         Button searchBtn = new Button("Search");
+        Button backBtn = new Button("Back");
 
+        backBtn.setOnAction(e ->
+                App.changeScene(MainSceneCreator.createScene())
+        );
+
+        //List to show results
         ListView<Meal> listView = new ListView<>();
 
+        //When we click the search button
         searchBtn.setOnAction(e -> {
                 try {
+                //Takes input from text field
                 String query = searchField.getText();
+
+                //Takes selected search type
                 String selectedType = searchTypeChoice.getValue();
 
                 if (query == null || query.isBlank()) {
@@ -44,20 +55,37 @@ public class SearchSceneCreator {
                 }
 
                 List<Meal> results;
+                //Set custom cell factory to display meal info
+                listView.setCellFactory(lv -> new ListCell<>() {
+                    @Override
+                    protected void updateItem(Meal meal, boolean empty) {
+                        super.updateItem(meal, empty);
+                        if (empty || meal == null) {
+                            setText(null);
+                        } else {
+                            setText("Name: " +meal.getName() + " ||  Category: " + meal.getCategory()
+                                    + " || Area: " + meal.getArea());
+                        }
+                    }
+                });
 
-                if (selectedType.equals("Αναζήτηση με υλικό")) {
+                //Search based on selected type
+                if (selectedType.equals("1 - Αναζήτηση με υλικό")) {
                     results = SF.SearchUsingIngredient(query);
                 } else {
                     results = SF.SearchUsingName(query);
                 }
 
-                listView.setItems(FXCollections.observableArrayList(results));
+                listView.setItems(
+                    FXCollections.observableArrayList(results)
+                );
 
             } catch (Exception ex) {
                 showAlert("Error", ex.getMessage());
             }
         });
 
+        //When we click a meal from the list
         listView.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
                 Meal selected = listView.getSelectionModel().getSelectedItem();
@@ -69,7 +97,7 @@ public class SearchSceneCreator {
             }
         });
 
-        HBox top = new HBox(10, searchTypeChoice, searchField, searchBtn);
+        HBox top = new HBox(20, searchTypeChoice, searchField, searchBtn, backBtn);
         BorderPane root = new BorderPane();
         root.setTop(top);
         root.setCenter(listView);

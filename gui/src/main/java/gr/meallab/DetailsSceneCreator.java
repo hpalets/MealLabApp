@@ -1,40 +1,103 @@
 package gr.meallab;
 
-import gr.meallab.Meal;
-import gr.meallab.SearchFunctions;
+import gr.meallab.model.Meal;
+import gr.meallab.model.MealDBClient;
+
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.geometry.Insets;
 
 public class DetailsSceneCreator {
 
     public static Scene createScene(String mealId) {
-        
 
-        TextArea detailsArea = new TextArea();
-        detailsArea.setEditable(false);
+        MealDBClient client = new MealDBClient();
+
+        Label nameLabel = new Label();
+        nameLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+        // Εικόνα
+        ImageView imageView = new ImageView();
+        imageView.setFitWidth(300);
+        imageView.setPreserveRatio(true);
+
+        // Υλικά
+        TextArea ingredientsArea = new TextArea();
+        ingredientsArea.setEditable(false);
+        ingredientsArea.setPrefRowCount(6);
+
+        // Οδηγίες
+        TextArea instructionsArea = new TextArea();
+        instructionsArea.setEditable(false);
+        instructionsArea.setWrapText(true);
 
         try {
-            Meal meal = SearchFunctions.getMealDetails(mealId);
+            Meal meal = client.getMealById(mealId);
 
-            detailsArea.setText(
-                    "Όνομα: " + meal.getStrMeal() + "\n\n" +
-                    "Οδηγίες:\n" + meal.getStrInstructions()
-            );
+            // Όνομα
+            nameLabel.setText(meal.getName());
+
+            // Εικόνα
+            if (meal.getThumbnail() != null && !meal.getThumbnail().isEmpty()) {
+                imageView.setImage(new Image(meal.getThumbnail(), true));
+            }
+
+            // Υλικά & δοσολογίες
+            StringBuilder ingredientsText = new StringBuilder();
+
+            for (int i = 1; i <= 20; i++) {
+                String ingredient = meal.getClass()
+                                        .getDeclaredField("strIngredient" + i)
+                                        .get(meal).toString();
+                String measure = meal.getClass()
+                                        .getDeclaredField("strMeasure" + i)
+                                        .get(meal).toString();
+
+                if (ingredient != null && !ingredient.isBlank()) {
+                    ingredientsText.append("- ")
+                                .append(ingredient);
+
+                    if (measure != null && !measure.isBlank()) {
+                        ingredientsText.append(" (").append(measure).append(")");
+                    }
+
+                    ingredientsText.append("\n");
+                }
+            }
+
+
+            ingredientsArea.setText(ingredientsText.toString());
+
+            // Οδηγίες
+            instructionsArea.setText(meal.getInstructions());
 
         } catch (Exception e) {
-            detailsArea.setText("Σφάλμα φόρτωσης συνταγής");
+            instructionsArea.setText("Σφάλμα φόρτωσης λεπτομερειών.");
         }
 
-        Button backBtn = new Button("Πίσω");
+        Button backBtn = new Button("Back");
         backBtn.setOnAction(e ->
-                App.changeScene(MainSceneCreator.createScene())
+            App.changeScene(MainSceneCreator.createScene())
         );
 
-        BorderPane root = new BorderPane();
-        root.setCenter(detailsArea);
-        root.setBottom(backBtn);
+        VBox content = new VBox(10,
+                imageView,
+                nameLabel,
+                new Label("Υλικά & Δοσολογίες"),
+                ingredientsArea,
+                new Label("Οδηγίες"),
+                instructionsArea,
+                backBtn
+        );
 
-        return new Scene(root, 800, 500);
+        content.setPadding(new Insets(10));
+
+        ScrollPane scrollPane = new ScrollPane(content);
+        scrollPane.setFitToWidth(true);
+
+        return new Scene(scrollPane, 1200, 800);
     }
 }
