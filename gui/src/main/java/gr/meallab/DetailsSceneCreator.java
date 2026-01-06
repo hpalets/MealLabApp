@@ -83,6 +83,6 @@ public class DetailsSceneCreator {
         ScrollPane scrollPane = new ScrollPane(content);
         scrollPane.setFitToWidth(true);
 
-        return new Scene(scrollPane, 1200, 800);
+        return new Scene(scrollPane, 1600, 950);
     }
 }
