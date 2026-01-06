@@ -1,0 +1,5 @@
+gr\meallab\App.class
+gr\meallab\MainSceneCreator.class
+gr\meallab\SearchSceneCreator.class
+gr\meallab\DetailsSceneCreator.class
+gr\meallab\SearchSceneCreator$1.class
