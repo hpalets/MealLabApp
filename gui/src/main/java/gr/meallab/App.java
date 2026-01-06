@@ -23,6 +23,7 @@ public class App extends Application {
             
 
                 primaryStage.setScene(mainScene);
+                primaryStage.centerOnScreen();
                 primaryStage.show();
             } catch(Exception e) {
                 e.printStackTrace();
@@ -32,6 +33,7 @@ public class App extends Application {
         //Method for changing scenes
         public static void changeScene(Scene scene) {
             primaryStage.setScene(scene);
+            primaryStage.centerOnScreen();
         }
         
 
