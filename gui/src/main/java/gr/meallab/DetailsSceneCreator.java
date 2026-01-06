@@ -1,7 +1,7 @@
 package gr.meallab;
 
-import gr.meallab.model.Meal;
-import gr.meallab.model.MealDBClient;
+import gr.meallab.Meal;
+import gr.meallab.MealDBClient;
 
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -19,69 +19,55 @@ public class DetailsSceneCreator {
         Label nameLabel = new Label();
         nameLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
 
-        // Εικόνα
         ImageView imageView = new ImageView();
         imageView.setFitWidth(300);
         imageView.setPreserveRatio(true);
 
-        // Υλικά
         TextArea ingredientsArea = new TextArea();
         ingredientsArea.setEditable(false);
-        ingredientsArea.setPrefRowCount(6);
+        ingredientsArea.setPrefRowCount(10); // Αυξήσαμε το ύψος για να φαίνονται περισσότερα
 
-        // Οδηγίες
         TextArea instructionsArea = new TextArea();
         instructionsArea.setEditable(false);
         instructionsArea.setWrapText(true);
+        instructionsArea.setPrefRowCount(15);
 
         try {
             Meal meal = client.getMealById(mealId);
 
-            // Όνομα
             nameLabel.setText(meal.getName());
 
-            // Εικόνα
             if (meal.getThumbnail() != null && !meal.getThumbnail().isEmpty()) {
                 imageView.setImage(new Image(meal.getThumbnail(), true));
             }
 
-            // Υλικά & δοσολογίες
+            // Διορθωμένο τμήμα για Υλικά & δοσολογίες
             StringBuilder ingredientsText = new StringBuilder();
 
-            for (int i = 1; i <= 20; i++) {
-                String ingredient = meal.getClass()
-                                        .getDeclaredField("strIngredient" + i)
-                                        .get(meal).toString();
-                String measure = meal.getClass()
-                                        .getDeclaredField("strMeasure" + i)
-                                        .get(meal).toString();
+            // Διαβάζουμε μέχρι το 11 που έχουμε ορίσει στο Meal.java
+            for (int i = 1; i <= 11; i++) {
+                String ingredient = meal.getIngredient(i);
+                String measure = meal.getMeasure(i);
 
                 if (ingredient != null && !ingredient.isBlank()) {
-                    ingredientsText.append("- ")
-                                .append(ingredient);
-
+                    ingredientsText.append("- ").append(ingredient);
                     if (measure != null && !measure.isBlank()) {
                         ingredientsText.append(" (").append(measure).append(")");
                     }
-
                     ingredientsText.append("\n");
                 }
             }
 
-
             ingredientsArea.setText(ingredientsText.toString());
-
-            // Οδηγίες
             instructionsArea.setText(meal.getInstructions());
 
         } catch (Exception e) {
-            instructionsArea.setText("Σφάλμα φόρτωσης λεπτομερειών.");
+            e.printStackTrace(); // Εκτύπωση για να βλέπουμε το σφάλμα στην κονσόλα
+            instructionsArea.setText("Σφάλμα φόρτωσης λεπτομερειών: " + e.getMessage());
         }
 
         Button backBtn = new Button("Back");
-        backBtn.setOnAction(e ->
-            App.changeScene(MainSceneCreator.createScene())
-        );
+        backBtn.setOnAction(e -> App.changeScene(MainSceneCreator.createScene()));
 
         VBox content = new VBox(10,
                 imageView,
@@ -94,7 +80,6 @@ public class DetailsSceneCreator {
         );
 
         content.setPadding(new Insets(10));
-
         ScrollPane scrollPane = new ScrollPane(content);
         scrollPane.setFitToWidth(true);
 

@@ -1,4 +1,4 @@
-package gr.meallab.model;
+package gr.meallab;
 
 
 import java.io.IOException;

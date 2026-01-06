@@ -1,8 +1,8 @@
 package gr.meallab;
 
-import gr.meallab.model.Meal;
-import gr.meallab.model.MealSummary;
-import gr.meallab.model.SearchFunctions;
+import gr.meallab.Meal;
+// import gr.meallab.model.MealSummary;
+import gr.meallab.SearchFunctions;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
