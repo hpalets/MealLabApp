@@ -1,7 +1,6 @@
 package gr.meallab;
 
 import gr.meallab.Meal;
-// import gr.meallab.model.MealSummary;
 import gr.meallab.SearchFunctions;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
