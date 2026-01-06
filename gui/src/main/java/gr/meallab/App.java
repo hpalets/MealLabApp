@@ -3,6 +3,7 @@ package gr.meallab;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 
@@ -15,6 +16,9 @@ public class App extends Application {
         public void start(Stage stage) {
             try{
                 this.primaryStage = stage;
+                 stage.getIcons().add(
+                    new Image(App.class.getResourceAsStream("/icons/app.png"))
+                );
                 stage.setTitle("Meal Lab App");
 
 
