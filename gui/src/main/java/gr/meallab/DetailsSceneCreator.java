@@ -16,6 +16,21 @@ public class DetailsSceneCreator {
 
         MealDBClient client = new MealDBClient();
 
+        //Create marks for Favorites and Cooked
+        TextField FavorFieldText = new TextField();
+        if (!MealStatusManager.isFavorite(mealId)) {
+            FavorFieldText.setText("NotFavorite ✘");
+        }else{
+            FavorFieldText.setText("IsFavorite ✔");
+        }
+
+        TextField CookedFieldText = new TextField();
+        if (!MealStatusManager.isCooked(mealId)) {
+            CookedFieldText.setText("NotCooked ✘");
+        }else{
+            CookedFieldText.setText("IsCooked ✔");
+        }
+
         Label nameLabel = new Label();
         nameLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
 
@@ -25,7 +40,7 @@ public class DetailsSceneCreator {
 
         TextArea ingredientsArea = new TextArea();
         ingredientsArea.setEditable(false);
-        ingredientsArea.setPrefRowCount(10); // Αυξήσαμε το ύψος για να φαίνονται περισσότερα
+        ingredientsArea.setPrefRowCount(10); 
 
         TextArea instructionsArea = new TextArea();
         instructionsArea.setEditable(false);
@@ -41,10 +56,10 @@ public class DetailsSceneCreator {
                 imageView.setImage(new Image(meal.getThumbnail(), true));
             }
 
-            // Διορθωμένο τμήμα για Υλικά & δοσολογίες
+            //Τμήμα για Υλικά & δοσολογίες
             StringBuilder ingredientsText = new StringBuilder();
 
-            // Διαβάζουμε μέχρι το 11 που έχουμε ορίσει στο Meal.java
+            // Getting ingredients and measures
             for (int i = 1; i <= 11; i++) {
                 String ingredient = meal.getIngredient(i);
                 String measure = meal.getMeasure(i);
@@ -66,8 +81,50 @@ public class DetailsSceneCreator {
             instructionsArea.setText("Σφάλμα φόρτωσης λεπτομερειών: " + e.getMessage());
         }
 
+
+        
         Button backBtn = new Button("Back");
         backBtn.setOnAction(e -> App.changeScene(MainSceneCreator.createScene()));
+
+        //Adding to Favorites 
+        Button FavoriteBtn = new Button("⭐ Favorite");
+        FavoriteBtn.setOnAction(e -> {
+        try {
+            if (!MealStatusManager.isFavorite(mealId)) {
+                FavorFieldText.setText("IsFavorite ✔");
+                MealStatusManager.addFavorite(mealId);
+                AlertUtil.showSuccess("Meal added to favorites!");
+            }else{
+                MealStatusManager.removeFavorite(mealId);
+                FavorFieldText.setText("NotFavorite ✘");
+                AlertUtil.showSuccess("Meal removed from favorites!");
+            }
+            
+        } catch (Exception ex) {
+            AlertUtil.showAlert("Failed to add meal to favorites: " + ex.getMessage());
+        }
+        });
+
+        //Adding to Cooked
+        Button cookedBtn = new Button("✔ Cooked");
+        cookedBtn.setOnAction(e -> {
+            try {
+                if(MealStatusManager.isCooked(mealId)){
+                    MealStatusManager.removeCooked(mealId);
+                    CookedFieldText.setText("NotCooked ✘");
+                    AlertUtil.showSuccess("Meal removed from cooked!");
+                    return;
+                }else{
+                    MealStatusManager.addCooked(mealId);
+                    CookedFieldText.setText("IsCooked ✔");
+                    AlertUtil.showSuccess("Meal added to cooked!");
+                }
+            } catch (Exception ex) {
+                AlertUtil.showAlert("Failed to add meal to cooked: " + ex.getMessage());
+            }         
+        });
+
+        HBox Choices = new HBox(20, backBtn,FavoriteBtn, FavorFieldText, cookedBtn, CookedFieldText);
 
         VBox content = new VBox(10,
                 imageView,
@@ -76,7 +133,7 @@ public class DetailsSceneCreator {
                 ingredientsArea,
                 new Label("Οδηγίες"),
                 instructionsArea,
-                backBtn
+                Choices
         );
 
         content.setPadding(new Insets(10));

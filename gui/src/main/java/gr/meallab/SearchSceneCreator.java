@@ -27,6 +27,7 @@ public class SearchSceneCreator {
 
         //Text Field for search input
         TextField searchField = new TextField();
+        searchField.setPrefWidth(300);
         searchField.setPromptText("GIVE INPUT (Ingredient or Name)");
 
         Button searchBtn = new Button("Search");

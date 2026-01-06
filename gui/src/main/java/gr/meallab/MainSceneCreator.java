@@ -16,11 +16,15 @@ public class MainSceneCreator {
 
         Button searchBtn = new Button("Search Recipes");
         Button randomBtn = new Button("Random Recipe");
+        Button CookedBtn = new Button("✔ Cooked Recipes");
+        Button FavoriteBtn = new Button("⭐ Favorite Recipes");
+
+
         searchBtn.setOnAction(e ->
                 App.changeScene(SearchSceneCreator.createScene())
         );
                
-       randomBtn.setOnAction(e -> {
+        randomBtn.setOnAction(e -> {
             try {
 
                 //Define MealDBclient
@@ -36,13 +40,21 @@ public class MainSceneCreator {
                 }
 
             } catch (Exception ex) {
-                AlertUtil.showError("Failed to load random recipe");
+                AlertUtil.showAlert( "Failed to load random recipe");
             }
         });
 
-        
+        FavoriteBtn.setOnAction(e ->
+        App.changeScene(FavoriteSceneCreator.createScene())
+        );
+
+
+        CookedBtn.setOnAction(e ->
+            App.changeScene(CookedSceneCreator.createScene())
+        );
+
        
-        VBox root = new VBox(20, searchBtn, randomBtn);
+        VBox root = new VBox(20, searchBtn, randomBtn, CookedBtn, FavoriteBtn);
         root.setAlignment(Pos.CENTER);
 
         return new Scene(root, 600, 400);
