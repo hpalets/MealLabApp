@@ -13,8 +13,6 @@ import javafx.scene.layout.VBox;
 public class MainSceneCreator {
     
      public static Scene createScene() {
-        MealDBClient ml = new MealDBClient();
-        String ID;
 
         Button searchBtn = new Button("Search Recipes");
         Button randomBtn = new Button("Random Recipe");
