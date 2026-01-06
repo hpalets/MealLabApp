@@ -1,0 +1,5 @@
+gr\meallab\model\MealResponse.class
+gr\meallab\model\MealDBClient.class
+gr\meallab\model\MealSummary.class
+gr\meallab\model\SearchFunctions.class
+gr\meallab\model\Meal.class
