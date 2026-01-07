@@ -66,9 +66,9 @@ public class MainSceneCreator {
             App.changeScene(FavoriteSceneCreator.createScene())
         );
 
-        cookedBtn.setOnAction(e -> 
-            App.changeScene(CookedSceneCreator.createScene())
-        );
+        cookedBtn.setOnAction(e -> {    
+    App.changeScene(CookedSceneCreator.createScene()); 
+});
 
         // --- 5. ΤΟΠΟΘΕΤΗΣΗ (LAYOUT) ---
         

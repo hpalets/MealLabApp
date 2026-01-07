@@ -141,52 +141,66 @@ public class DetailsSceneCreator {
         // Favorite Logic
         Button FavoriteBtn = createStyledButton("⭐ Favorite", "#e74c3c");
         FavoriteBtn.setOnAction(e -> {
-            try {
-                if (!MealStatusManager.isFavorite(mealId)) {
-                    favorStatusLabel.setText("IsFavorite ✔");
-                    favorStatusLabel.setStyle("-fx-text-fill: #e67e22; -fx-font-weight: bold;");
-                    MealStatusManager.addFavorite(mealId);
-                    AlertUtil.showSuccess("Meal added to favorites!");
-                    boolean exists = App.favoritesList.stream().anyMatch(r -> r.getIdMeal().equals(mealId));
-                    if (!exists) App.favoritesList.add(new Recipe(nameLabel.getText(), mealId));
-                } else {
-                    MealStatusManager.removeFavorite(mealId);
-                    favorStatusLabel.setText("NotFavorite ✘");
-                    favorStatusLabel.setStyle("-fx-text-fill: #7f8c8d; -fx-font-weight: bold;");
-                    AlertUtil.showSuccess("Meal removed from favorites!");
-                    App.favoritesList.removeIf(r -> r.getIdMeal().equals(mealId));
-                }
-                //Here we overwrite the storage with updated lists
-                StorageManager.save(App.favoritesList, App.cookedList);
-            } catch (Exception ex) {
-                AlertUtil.showAlert("Error: " + ex.getMessage());
+    try {
+        if (!MealStatusManager.isFavorite(mealId)) {
+            favorStatusLabel.setText("IsFavorite ✔");
+            favorStatusLabel.setStyle("-fx-text-fill: #e67e22; -fx-font-weight: bold;");
+            MealStatusManager.addFavorite(mealId);
+            AlertUtil.showSuccess("Meal added to favorites!");
+            
+            // Προσθήκη μόνο του ID στην App.favoritesList (που είναι πλέον List<String>)
+            if (!App.favoritesList.contains(mealId)) {
+                App.favoritesList.add(mealId);
             }
-        });
+        } else {
+            MealStatusManager.removeFavorite(mealId);
+            favorStatusLabel.setText("NotFavorite ✘");
+            favorStatusLabel.setStyle("-fx-text-fill: #7f8c8d; -fx-font-weight: bold;");
+            AlertUtil.showSuccess("Meal removed from favorites!");
+            
+            // Αφαίρεση του ID
+            App.favoritesList.remove(mealId);
+        }
+        
+        // ΔΙΟΡΘΩΣΗ: Κλήση της νέας saveData() χωρίς ορίσματα
+        StorageManager.saveData(); 
+        
+    } catch (Exception ex) {
+        AlertUtil.showAlert("Error: " + ex.getMessage());
+    }
+});
 
         // Cooked Logic
         Button cookedBtn = createStyledButton("✔ Cooked", "#27ae60");
         cookedBtn.setOnAction(e -> {
-            try {
-                if (MealStatusManager.isCooked(mealId)) {
-                    MealStatusManager.removeCooked(mealId);
-                    cookedStatusLabel.setText("NotCooked ✘");
-                    cookedStatusLabel.setStyle("-fx-text-fill: #7f8c8d; -fx-font-weight: bold;");
-                    AlertUtil.showSuccess("Meal removed from cooked!");
-                    App.cookedList.removeIf(r -> r.getIdMeal().equals(mealId));
-                } else {
-                    MealStatusManager.addCooked(mealId);
-                    cookedStatusLabel.setText("IsCooked ✔");
-                    cookedStatusLabel.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
-                    AlertUtil.showSuccess("Meal added to cooked!");
-                    boolean exists = App.cookedList.stream().anyMatch(r -> r.getIdMeal().equals(mealId));
-                    if (!exists) App.cookedList.add(new Recipe(nameLabel.getText(), mealId));
-                }
-                //Here we overwrite the storage with updated lists
-                StorageManager.save(App.favoritesList, App.cookedList);
-            } catch (Exception ex) {
-                AlertUtil.showAlert("Error: " + ex.getMessage());
-            }         
-        });
+    try {
+        if (MealStatusManager.isCooked(mealId)) {
+            MealStatusManager.removeCooked(mealId);
+            cookedStatusLabel.setText("NotCooked ✘");
+            cookedStatusLabel.setStyle("-fx-text-fill: #7f8c8d; -fx-font-weight: bold;");
+            AlertUtil.showSuccess("Meal removed from cooked!");
+            
+            // Αφαίρεση του ID
+            App.cookedList.remove(mealId);
+        } else {
+            MealStatusManager.addCooked(mealId);
+            cookedStatusLabel.setText("IsCooked ✔");
+            cookedStatusLabel.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
+            AlertUtil.showSuccess("Meal added to cooked!");
+            
+            // Προσθήκη μόνο του ID
+            if (!App.cookedList.contains(mealId)) {
+                App.cookedList.add(mealId);
+            }
+        }
+        
+        // ΔΙΟΡΘΩΣΗ: Κλήση της νέας saveData() χωρίς ορίσματα
+        StorageManager.saveData();
+        
+    } catch (Exception ex) {
+        AlertUtil.showAlert("Error: " + ex.getMessage());
+    } 
+});
 
         VBox statusBox = new VBox(5, favorStatusLabel, cookedStatusLabel);
         statusBox.setAlignment(Pos.CENTER);

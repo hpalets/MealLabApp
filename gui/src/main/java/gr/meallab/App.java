@@ -11,8 +11,8 @@ import javafx.stage.Stage;
 
 public class App extends Application {
 
-    public static List<Recipe> favoritesList = new ArrayList<>();
-    public static List<Recipe> cookedList = new ArrayList<>();
+    public static List<String> favoritesList = new ArrayList<>();
+    public static List<String> cookedList = new ArrayList<>();
     
     private static Stage primaryStage;
     static Scene mainScene, searchScene, mealDetailScene;
@@ -21,15 +21,16 @@ public class App extends Application {
     public void start(Stage stage) {
         try {
             // 1. Φόρτωση δεδομένων
+            primaryStage = stage;
             UserData data = StorageManager.load();
             if (data != null) {
                 favoritesList.addAll(data.favorites);
                 cookedList.addAll(data.cooked);
-                for (Recipe r : data.favorites) {
-                    MealStatusManager.addFavorite(r.getIdMeal());
+                for (String id : data.favorites) {
+                    MealStatusManager.addFavorite(id);
                 }
-                for (Recipe r : data.cooked) {
-                    MealStatusManager.addCooked(r.getIdMeal());
+                for (String id : data.cooked) {
+                    MealStatusManager.addCooked(id);
                 }
             }
 
@@ -56,6 +57,9 @@ public class App extends Application {
             System.err.println("Error starting the application:");
             e.printStackTrace();
         }
+    }
+    public static Stage getWindow() {
+        return primaryStage;
     }
 
     // --- ΜΕΘΟΔΟΣ CHANGE SCENE ---
