@@ -3,8 +3,10 @@ package gr.meallab;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Application;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.StackPane; // <-- Προστέθηκε αυτό για το τρικ
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -18,7 +20,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            // 1. Φόρτωση δεδομένων από το JSON
+            // 1. Φόρτωση δεδομένων
             UserData data = StorageManager.load();
             if (data != null) {
                 favoritesList.addAll(data.favorites);
@@ -31,11 +33,11 @@ public class App extends Application {
                 }
             }
 
-            // 2. Ρύθμιση του Stage
+            // 2. Ρύθμιση Stage
             this.primaryStage = stage;
             stage.setTitle("Meal Lab App");
 
-            // 3. Φόρτωση εικονιδίου (με προστασία αν λείπει το αρχείο)
+            // 3. Εικονίδιο
             try {
                 stage.getIcons().add(
                     new Image(App.class.getResourceAsStream("/icons/app.png"))
@@ -44,7 +46,7 @@ public class App extends Application {
                 System.out.println("Icon not found, skipping...");
             }
 
-            // 4. Δημιουργία και εμφάνιση αρχικής σκηνής
+            // 4. Εμφάνιση αρχικής σκηνής
             mainScene = MainSceneCreator.createScene();
             primaryStage.setScene(mainScene);
             primaryStage.centerOnScreen();
@@ -56,11 +58,21 @@ public class App extends Application {
         }
     }
 
-    // Method for changing scenes
-    public static void changeScene(Scene scene) {
+    // --- ΜΕΘΟΔΟΣ CHANGE SCENE ---
+    public static void changeScene(Scene newScene) {
         if (primaryStage != null) {
-            primaryStage.setScene(scene);
-            primaryStage.centerOnScreen();
+            Scene currentScene = primaryStage.getScene();
+
+            if (currentScene == null) {
+                primaryStage.setScene(newScene);
+            } else {
+                
+                Parent newRoot = newScene.getRoot();             
+            
+                newScene.setRoot(new StackPane());         
+                
+                currentScene.setRoot(newRoot);
+            }
         }
     }
 
