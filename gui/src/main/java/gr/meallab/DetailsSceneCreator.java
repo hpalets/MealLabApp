@@ -95,7 +95,7 @@ public class DetailsSceneCreator {
                 imageView.setImage(new Image(meal.getThumbnail(), true));
             }
 
-            // Loop για τα υλικά
+            // Loop for ingredients and measures
             StringBuilder ingredientsText = new StringBuilder();
             for (int i = 1; i <= 20; i++) {
                 String ingredient = meal.getIngredient(i);
@@ -122,6 +122,22 @@ public class DetailsSceneCreator {
         Button backBtn = createStyledButton("⬅ Back", "#7f8c8d");
         backBtn.setOnAction(e -> App.changeScene(MainSceneCreator.createScene()));
 
+        
+        /*
+        
+                In this section, we toggle the favorite and cooked status of the meal.
+                    If the meal is not currently a favorite/cooked, we add it to the corresponding list,
+                    update the status label, and show a success alert. If it is already a favorite,
+                    we remove it from the  list, update the status label, and show a success alert.
+                    Finally, we save the updated lists to storage.
+                
+                We use 2 different Lists because we have 2 different objects:
+                    - MealStatusManager uses meal IDs (String) for quick status checks.
+                    - App.favoritesList and App.cookedList use Recipe objects for detailed info and display. (for Json)
+
+        */ 
+
+
         // Favorite Logic
         Button FavoriteBtn = createStyledButton("⭐ Favorite", "#e74c3c");
         FavoriteBtn.setOnAction(e -> {
@@ -140,6 +156,7 @@ public class DetailsSceneCreator {
                     AlertUtil.showSuccess("Meal removed from favorites!");
                     App.favoritesList.removeIf(r -> r.getIdMeal().equals(mealId));
                 }
+                //Here we overwrite the storage with updated lists
                 StorageManager.save(App.favoritesList, App.cookedList);
             } catch (Exception ex) {
                 AlertUtil.showAlert("Error: " + ex.getMessage());
@@ -164,13 +181,12 @@ public class DetailsSceneCreator {
                     boolean exists = App.cookedList.stream().anyMatch(r -> r.getIdMeal().equals(mealId));
                     if (!exists) App.cookedList.add(new Recipe(nameLabel.getText(), mealId));
                 }
+                //Here we overwrite the storage with updated lists
                 StorageManager.save(App.favoritesList, App.cookedList);
             } catch (Exception ex) {
                 AlertUtil.showAlert("Error: " + ex.getMessage());
             }         
         });
-
-        // --- LAYOUT ---
 
         VBox statusBox = new VBox(5, favorStatusLabel, cookedStatusLabel);
         statusBox.setAlignment(Pos.CENTER);

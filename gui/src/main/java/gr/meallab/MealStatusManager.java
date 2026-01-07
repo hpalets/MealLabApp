@@ -5,6 +5,7 @@ import java.util.Set;
 
 public class MealStatusManager {
 
+    // Using Sets for efficient lookup of meal IDs and then we search them 
     private static final Set<String> favorites = new HashSet<>();
     private static final Set<String> cooked = new HashSet<>();
 

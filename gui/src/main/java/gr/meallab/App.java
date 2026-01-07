@@ -67,11 +67,15 @@ public class App extends Application {
                 primaryStage.setScene(newScene);
             } else {
                 
+                // Reuse the existing Scene to avoid recreating the Stage.
+                // Only the root node is replaced, improving performance and keeping window state.
+
                 Parent newRoot = newScene.getRoot();             
             
                 newScene.setRoot(new StackPane());         
                 
                 currentScene.setRoot(newRoot);
+                
             }
         }
     }
