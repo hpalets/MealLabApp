@@ -2,7 +2,9 @@ package gr.meallab;
 
 import gr.meallab.Meal;
 import gr.meallab.MealDBClient;
-
+import gr.meallab.App;
+import gr.meallab.Recipe;
+import gr.meallab.StorageManager;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -94,12 +96,14 @@ public class DetailsSceneCreator {
                 FavorFieldText.setText("IsFavorite ✔");
                 MealStatusManager.addFavorite(mealId);
                 AlertUtil.showSuccess("Meal added to favorites!");
+                App.favoritesList.add(new Recipe(nameLabel.getText(), mealId));
             }else{
                 MealStatusManager.removeFavorite(mealId);
                 FavorFieldText.setText("NotFavorite ✘");
                 AlertUtil.showSuccess("Meal removed from favorites!");
             }
-            
+            StorageManager.save(App.favoritesList, App.cookedList);
+
         } catch (Exception ex) {
             AlertUtil.showAlert("Failed to add meal to favorites: " + ex.getMessage());
         }
@@ -113,12 +117,15 @@ public class DetailsSceneCreator {
                     MealStatusManager.removeCooked(mealId);
                     CookedFieldText.setText("NotCooked ✘");
                     AlertUtil.showSuccess("Meal removed from cooked!");
+                    App.cookedList.removeIf(r -> r.getIdMeal().equals(mealId));
                     return;
                 }else{
                     MealStatusManager.addCooked(mealId);
                     CookedFieldText.setText("IsCooked ✔");
                     AlertUtil.showSuccess("Meal added to cooked!");
+                    App.cookedList.add(new Recipe(nameLabel.getText(), mealId));
                 }
+                StorageManager.save(App.favoritesList, App.cookedList);
             } catch (Exception ex) {
                 AlertUtil.showAlert("Failed to add meal to cooked: " + ex.getMessage());
             }         
