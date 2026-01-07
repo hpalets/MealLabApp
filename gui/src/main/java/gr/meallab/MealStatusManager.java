@@ -35,7 +35,6 @@ public class MealStatusManager {
         return cooked.contains(mealId);
     }
 
-    // (προαιρετικό – για λίστες)
     public static Set<String> getFavorites() {
         return favorites;
     }
