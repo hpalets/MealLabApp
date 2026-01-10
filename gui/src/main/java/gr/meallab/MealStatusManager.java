@@ -20,6 +20,7 @@ public class MealStatusManager {
      */
     public static void addFavorite(String mealId) {
         favorites.add(mealId);
+        System.out.println("Added favorite: " + mealId);
         StorageManager.saveData(); // Ενημέρωση του αρχείου JSON
     }
 
@@ -28,6 +29,7 @@ public class MealStatusManager {
      */
     public static void removeFavorite(String mealId) {
         favorites.remove(mealId);
+        System.out.println("Removed favorite: " + mealId);
         StorageManager.saveData(); // Ενημέρωση του αρχείου JSON
     }
 
@@ -45,6 +47,7 @@ public class MealStatusManager {
      */
     public static void addCooked(String mealId) {
         cooked.add(mealId);
+        System.out.println("Added cooked: " + mealId);
         StorageManager.saveData(); // Ενημέρωση του αρχείου JSON
     }
 
@@ -53,6 +56,7 @@ public class MealStatusManager {
      */
     public static void removeCooked(String mealId) {
         cooked.remove(mealId);
+        System.out.println("Removed cooked: " + mealId);
         StorageManager.saveData(); // Ενημέρωση του αρχείου JSON
     }
 
