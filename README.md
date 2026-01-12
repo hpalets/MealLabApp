@@ -20,6 +20,7 @@ Java εφαρμογή που καταναλώνει το **TheMealDB API** κα�
 - **Random Recipe** -> Εμφανιζει στο DetailScene μια Random συνταγη.
 - **Favorite Recipe** -> Εμφανιζει Favorite Recipes.
 - **Cooked Recipe** -> Εμφανιζει Cooked Recipes.
+- **Detailed Screen** -> Εμφανιζει αναλυτικα μια συνταγή και μας δίνει την επιλογή να το προσθέσουμε στα favortites/cooked
 ## 🚀 Εκτέλεση
 
 ### 1️⃣ Build API
