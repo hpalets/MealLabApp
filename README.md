@@ -36,4 +36,4 @@ mvn javafx:run
 ```
 
 ### Maven 
-You have to install the Maven.zip in order to be able to run the "mvn" command
+You have to install the [Maven.zip](https://maven.apache.org/download.cgi) in order to be able to run the "mvn" command
