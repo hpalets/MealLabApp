@@ -37,7 +37,7 @@ public class FavoriteSceneCreator {
             listContainer.getChildren().add(empty);
         } else {
             for (String mealId : favoritesList) {
-                // Καλούμε τη μέθοδο createRecipeRow
+                //Create row for each favorite meal
                 listContainer.getChildren().add(createRecipeRow(mealId, listContainer, true));
             }
         }
@@ -62,11 +62,11 @@ public class FavoriteSceneCreator {
         row.setPadding(new Insets(15, 20, 15, 20));
         row.setStyle("-fx-border-color: #eee; -fx-border-width: 0 0 1 0;");
 
-        // Αρχικό Label με το ID ή μήνυμα φόρτωσης
+        //Label με το ID ή μήνυμα φόρτωσης
         Label lbl = new Label("✔ Loading " + mealId + "...");
         lbl.setStyle("-fx-font-size: 14px; -fx-text-fill: #333;");
 
-        // --- FETCH ΟΝΟΜΑΤΟΣ ΑΠΟ ΤΟ API ΣΕ ΝΕΟ THREAD ---
+
         new Thread(() -> {
             try {
                 MealDBClient client = new MealDBClient();

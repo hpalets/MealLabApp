@@ -22,7 +22,7 @@ public class SearchSceneCreator {
     public static Scene createScene() {
         SearchFunctions SF = new SearchFunctions();
 
-        // --- 1. SETUP ΦΟΝΤΟΥ ---
+        // --- 1. SETUP Background ---
         ImageView backgroundView = new ImageView();
         try {
             Image bgImage = new Image(SearchSceneCreator.class.getResourceAsStream("/icons/background.jpg"));
@@ -32,9 +32,9 @@ public class SearchSceneCreator {
             System.out.println("Background image not found");
         }
 
-        // --- 2. UI ELEMENTS (Google Style) ---
+        // --- 2. UI ELEMENTS  ---
 
-        // Τίτλος (Meal Lab App)
+        // Title
         Label titleLabel = new Label("Meal Lab App");
         titleLabel.setStyle("-fx-font-size: 48px; -fx-font-weight: bold; -fx-text-fill: white; -fx-effect: dropshadow(three-pass-box, black, 10, 0, 0, 0);");
 
@@ -58,15 +58,16 @@ public class SearchSceneCreator {
         Button searchBtn = createStyledButton("🔍 Search", "#3498db");
         Button backBtn = createStyledButton("⬅ Back", "#7f8c8d");
 
-        // List to show results (Διατηρούμε τη δική σου ListView)
+        // List to show results 
         ListView<Meal> listView = new ListView<>();
         listView.setMaxWidth(800);
-        // Ημιδιάφανη λίστα για να φαίνεται ωραία στο background
+
+        // Background and styling for ListView
         listView.setStyle("-fx-background-color: rgba(255, 255, 255, 0.9); -fx-background-radius: 10; -fx-control-inner-background: rgba(255, 255, 255, 0.9);");
 
-        // --- 3. LOGIC (Η δική σου λογική encapsulated) ---
+        // --- 3. LOGIC ---
         
-        // Φτιάχνουμε μια Runnable για να την καλούμε και στο Κουμπί και στο Enter
+        //Takes the input and performs the search
         Runnable executeSearch = () -> {
             try {
                 // Takes input from text field
@@ -132,14 +133,14 @@ listView.setCellFactory(lv -> new ListCell<Meal>() {
     }
 });
 
-                // Search based on selected type (Ο ΚΩΔΙΚΑΣ ΣΟΥ ΑΚΡΙΒΩΣ)
+                // Search based on selected type 
                 if (selectedType.equals("1 - Αναζήτηση με υλικό")) {
                     results = SF.SearchUsingIngredient(query);
                 } else {
                     results = SF.SearchUsingName(query);
                 }
                 
-                // Προστασία αν γυρίσει null η λίστα (για να μην σκάσει)
+                // Null check and update ListView
                 if (results != null) {
                     listView.setItems(FXCollections.observableArrayList(results));
                 } else {
@@ -167,7 +168,7 @@ listView.setCellFactory(lv -> new ListCell<Meal>() {
         // Back Button
         backBtn.setOnAction(e -> App.changeScene(MainSceneCreator.createScene()));
 
-        // List Click Event (Ο ΚΩΔΙΚΑΣ ΣΟΥ ΑΚΡΙΒΩΣ)
+        // List Click Event 
         listView.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
                 Meal selected = listView.getSelectionModel().getSelectedItem();
@@ -206,14 +207,14 @@ listView.setCellFactory(lv -> new ListCell<Meal>() {
     }
 
     private static void showAlert(String title, String msg) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION); // Άλλαξα σε Information γιατί το Error είναι τρομακτικό
+        Alert alert = new Alert(Alert.AlertType.INFORMATION); 
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
     }
 
-    // Helper για ομοιομορφία κουμπιών (ίδιο με τα άλλα Scenes)
+    // Helper για ομοιομορφία κουμπιών 
     private static Button createStyledButton(String text, String colorHex) {
         Button btn = new Button(text);
         

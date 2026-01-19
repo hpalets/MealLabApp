@@ -21,19 +21,20 @@ public class CookedSceneCreator {
         root.setPadding(new Insets(40));
         root.setStyle("-fx-background-color: #2c3e50;"); // Ίδιο φόντο με τα Favorites
 
-        // Τίτλος
+        // Title
         Label titleLabel = new Label("Cooking History");
         titleLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;");
 
-        // Η Λευκή Κάρτα (Card Layout) - Μαζεμένη στο κέντρο
+        // Card Layout for recipe
         VBox listContainer = new VBox(0);
         listContainer.setMaxWidth(500); 
         listContainer.setStyle("-fx-background-color: white; -fx-background-radius: 15;");
 
-        // Λήψη των IDs από τον Manager
+        // IDs of cooked meals
         Set<String> cookedSet = MealStatusManager.getCooked();
         List<String> cookedList = new ArrayList<>(cookedSet);
 
+        //We check if the list is empty
         if (cookedList.isEmpty()) {
             Label empty = new Label("You haven't cooked anything yet.");
             empty.setPadding(new Insets(20));
@@ -46,14 +47,14 @@ public class CookedSceneCreator {
             }
         }
 
-        // ScrollPane για να μπορούμε να σκρολάρουμε αν η λίστα μεγαλώσει
+        // ScrollPane to be able to scroll
         ScrollPane scrollPane = new ScrollPane(listContainer);
         scrollPane.setFitToWidth(true);
         scrollPane.setMaxWidth(520); 
         scrollPane.setPrefHeight(450);
         scrollPane.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
 
-        // Κουμπί επιστροφής
+        // Back Button
         Button backBtn = new Button("Back to Menu");
         backBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-background-radius: 10; -fx-padding: 10 20; -fx-cursor: hand;");
         backBtn.setOnAction(e -> App.changeScene(MainSceneCreator.createScene()));
@@ -62,7 +63,7 @@ public class CookedSceneCreator {
         return new Scene(root, 900, 700);
     }
 
-    // Βοηθητική μέθοδος για τη γραμμή με το Χ (πανομοιότυπη με των Favorites)
+    // Method to create each recipe row
     private static HBox createRecipeRow(String mealId, VBox parent, boolean isFavorite) {
         HBox row = new HBox(10);
         row.setAlignment(Pos.CENTER_LEFT);
@@ -73,7 +74,7 @@ public class CookedSceneCreator {
         Label lbl = new Label("✔ Loading " + mealId + "...");
         lbl.setStyle("-fx-font-size: 14px; -fx-text-fill: #333;");
 
-        // Thread για να φέρει το όνομα από το API
+        // Thread για να φέρει το όνομα από το API for eace mealId
         new Thread(() -> {
             try {
                 MealDBClient client = new MealDBClient();
@@ -86,9 +87,8 @@ public class CookedSceneCreator {
             }
         }).start();
 
-        // Κάνει όλη τη γραμμή clickable για να πηγαίνει στα Details
+        // When clicking the row, go to details scene
         row.setOnMouseClicked(e -> {
-            // Προσοχή: Μόνο αν δεν πατήθηκε το κουμπί διαγραφής
             if (e.getTarget() instanceof Label || e.getTarget() instanceof HBox) {
                 App.changeScene(DetailsSceneCreator.createScene(mealId));
             }
@@ -97,10 +97,11 @@ public class CookedSceneCreator {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        // ΤΟ ΚΟΚΚΙΝΟ Χ ΔΙΑΓΡΑΦΗΣ
+        // X delete button on row
         Button deleteBtn = new Button("✖");
         deleteBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #e74c3c; -fx-font-weight: bold; -fx-font-size: 16px; -fx-cursor: hand;");
         
+        //When clicking delete, remove from list and update storage
         deleteBtn.setOnAction(e -> {
             if (isFavorite) {
                 MealStatusManager.removeFavorite(mealId);
@@ -112,7 +113,7 @@ public class CookedSceneCreator {
 
         row.getChildren().addAll(lbl, spacer, deleteBtn);
 
-        // Εφέ όταν περνάει το ποντίκι
+        // Mouse Hover Effects
         row.setOnMouseEntered(e -> row.setStyle("-fx-background-color: #f9f9f9; -fx-border-color: #eee; -fx-border-width: 0 0 1 0; -fx-cursor: hand;"));
         row.setOnMouseExited(e -> row.setStyle("-fx-background-color: white; -fx-border-color: #eee; -fx-border-width: 0 0 1 0;"));
 

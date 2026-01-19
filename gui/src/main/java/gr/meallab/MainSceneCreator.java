@@ -15,36 +15,33 @@ public class MainSceneCreator {
 
     public static Scene createScene() {
 
-        // --- 1. ΡΥΘΜΙΣΗ ΦΟΝΤΟΥ (GIF) ---
+        // --- 1. Background Image ---
         ImageView backgroundView = new ImageView();
         try {
-            // Φόρτωση του GIF από τον φάκελο icons
-            // Αν το αρχείο σου λέγεται αλλιώς, άλλαξε το όνομα εδώ
+            // Load from resources
             Image bgImage = new Image(MainSceneCreator.class.getResourceAsStream("/icons/background.jpg"));
             backgroundView.setImage(bgImage);
-
-            // Ρυθμίσεις για να πιάνει όλο το παράθυρο (800x600 είναι καλό μέγεθος)
             backgroundView.setFitWidth(800);
             backgroundView.setFitHeight(600);
             
-            // Αν θες να παραμορφώνεται ελαφρώς για να γεμίζει όλο το κενό:
+            // Doesn't preserve ratio to fill the screen
             backgroundView.setPreserveRatio(false); 
         } catch (Exception e) {
-            System.out.println("Σφάλμα: Το GIF δεν βρέθηκε στο /icons/cooking_bg.gif");
+            System.out.println("Error:can't load image from /icons/cooking_bg.gif");
         }
 
-        // --- 2. ΤΙΤΛΟΣ ---
+        // --- 2. Title ---
         Label titleLabel = new Label("Meal Lab App");
-        // Λευκά γράμματα με μαύρη σκιά για να διαβάζονται παντού
+        // White Text with Drop Shadow
         titleLabel.setStyle("-fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill: white; -fx-effect: dropshadow(three-pass-box, black, 10, 0, 0, 0);");
 
-        // --- 3. ΔΗΜΙΟΥΡΓΙΑ ΚΟΥΜΠΙΩΝ (Με στυλ) ---
+        // --- 3. Create Buttons ---
         Button searchBtn = createStyledButton("🔍 Search Recipes");
         Button randomBtn = createStyledButton("🎲 Random Recipe");
         Button cookedBtn = createStyledButton("✔ Cooked Recipes");
         Button favoriteBtn = createStyledButton("⭐ Favorite Recipes");
 
-        // --- 4. ΛΕΙΤΟΥΡΓΙΕΣ ΚΟΥΜΠΙΩΝ ---
+        // --- 4. Button Functions ---
 
         searchBtn.setOnAction(e -> 
             App.changeScene(SearchSceneCreator.createScene())
@@ -70,7 +67,7 @@ public class MainSceneCreator {
     App.changeScene(CookedSceneCreator.createScene()); 
 });
 
-        // --- 5. ΤΟΠΟΘΕΤΗΣΗ (LAYOUT) ---
+        // --- 5. LAYOUT---
         
         // VBox για τα κουμπιά και τον τίτλο
         VBox menuBox = new VBox(20, titleLabel, searchBtn, randomBtn, cookedBtn, favoriteBtn);
@@ -80,22 +77,19 @@ public class MainSceneCreator {
         StackPane root = new StackPane();
         root.getChildren().addAll(backgroundView, menuBox);
 
-        // --- ΤΟ ΜΥΣΤΙΚΟ ΓΙΑ FULL SCREEN ---
         // Συνδέουμε το μέγεθος της εικόνας με το μέγεθος του παραθύρου (root)
         backgroundView.fitWidthProperty().bind(root.widthProperty());
         backgroundView.fitHeightProperty().bind(root.heightProperty());
-        
-        // Σιγουρευόμαστε ότι δεν κρατάει αναλογίες για να γεμίζει παντού
         backgroundView.setPreserveRatio(false); 
 
         return new Scene(root, 800, 600);
     }
 
-    // --- ΒΟΗΘΗΤΙΚΗ ΜΕΘΟΔΟΣ ΓΙΑ ΟΜΟΡΦΑ ΚΟΥΜΠΙΑ ---
+    // --- Buttons Style ---
     private static Button createStyledButton(String text) {
         Button btn = new Button(text);
         
-        // CSS για ημιδιάφανο λευκό φόντο, στρογγυλεμένες γωνίες και bold γράμματα
+        // CSS for the background and hover effects
         String defaultStyle = "-fx-background-color: rgba(255, 255, 255, 0.85); " +
                               "-fx-text-fill: #333; " +
                               "-fx-font-size: 16px; " +

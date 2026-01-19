@@ -23,20 +23,20 @@ public class DetailsSceneCreator {
         MealDBClient client = new MealDBClient();
         Meal meal = null;
         
-        // Φόρτωση Meal αντικειμένου
+        // Meal Details
         try {
             meal = client.getMealById(mealId);
         } catch (Exception e) {
             e.printStackTrace();
         }
         
-        // Αν δεν βρεθεί, επιστροφή (safety check)
+        // if meal is null, return to main scene
         if (meal == null) return MainSceneCreator.createScene();
 
 
         // --- UI Setup: Φόντο & Layout ---
         
-        // 1. Background Image (Αχνή)
+        // 1. Background Image
         ImageView bgView = new ImageView();
         try {
             Image bgImg = new Image(meal.getThumbnail(), true);
@@ -66,13 +66,13 @@ public class DetailsSceneCreator {
             cookedStatusLabel.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
         }
 
-        // 3. Name Label (Τίτλος)
+        // 3. Name Label 
         Label nameLabel = new Label();
         nameLabel.setStyle("-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 0);");
         nameLabel.setWrapText(true);
         nameLabel.setTextAlignment(TextAlignment.CENTER);
 
-        // 4. Main Image (Κεντρική εικόνα)
+        // 4. Main Image 
         ImageView imageView = new ImageView();
         imageView.setFitWidth(300);
         imageView.setPreserveRatio(true);
@@ -117,7 +117,7 @@ public class DetailsSceneCreator {
             instructionsTextObj.setText("Σφάλμα: " + e.getMessage());
         }
 
-        // --- ΚΟΥΜΠΙΑ ---
+        // --- Buttons ---
 
         Button backBtn = createStyledButton("⬅ Back", "#7f8c8d");
         backBtn.setOnAction(e -> App.changeScene(MainSceneCreator.createScene()));
@@ -138,7 +138,7 @@ public class DetailsSceneCreator {
         */ 
 
 
-        // Favorite Logic
+        // Favorite Button
         Button FavoriteBtn = createStyledButton("⭐ Favorite", "#e74c3c");
         FavoriteBtn.setOnAction(e -> {
     try {
@@ -148,7 +148,7 @@ public class DetailsSceneCreator {
             MealStatusManager.addFavorite(mealId);
             AlertUtil.showSuccess("Meal added to favorites!");
             
-            // Προσθήκη μόνο του ID στην App.favoritesList (που είναι πλέον List<String>)
+            // We add only the Id to the list
             if (!App.favoritesList.contains(mealId)) {
                 App.favoritesList.add(mealId);
             }
@@ -162,7 +162,7 @@ public class DetailsSceneCreator {
             App.favoritesList.remove(mealId);
         }
         
-        // ΔΙΟΡΘΩΣΗ: Κλήση της νέας saveData() χωρίς ορίσματα
+        //We add the Data in JSON
         StorageManager.saveData(); 
         
     } catch (Exception ex) {
@@ -188,13 +188,13 @@ public class DetailsSceneCreator {
             cookedStatusLabel.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
             AlertUtil.showSuccess("Meal added to cooked!");
             
-            // Προσθήκη μόνο του ID
+            // ID Storage
             if (!App.cookedList.contains(mealId)) {
                 App.cookedList.add(mealId);
             }
         }
         
-        // ΔΙΟΡΘΩΣΗ: Κλήση της νέας saveData() χωρίς ορίσματα
+        //We add the Data in JSON
         StorageManager.saveData();
         
     } catch (Exception ex) {
@@ -214,7 +214,7 @@ public class DetailsSceneCreator {
         Label instrTitle = new Label("Instructions");
         instrTitle.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #e67e22; -fx-padding: 10 0 5 0;");
 
-        // Η Λευκή Κάρτα
+        // White card
         VBox contentCard = new VBox(15,
                 nameLabel,
                 imageView,
@@ -230,7 +230,7 @@ public class DetailsSceneCreator {
         contentCard.setMaxWidth(900);
         contentCard.setStyle("-fx-background-color: rgba(255, 255, 255, 0.92); -fx-background-radius: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 15, 0, 0, 0);");
 
-        // ΣΩΣΤΟ ΚΕΝΤΡΑΡΙΣΜΑ: Βάζουμε την κάρτα μέσα σε StackPane
+        // Center Wrapper
         StackPane centerWrapper = new StackPane(contentCard);
         centerWrapper.setPadding(new Insets(20));
         centerWrapper.setStyle("-fx-background-color: transparent;");

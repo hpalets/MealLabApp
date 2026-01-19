@@ -20,7 +20,7 @@ public class MealDBClient {
         this.mapper = new ObjectMapper();
     }
 
-    // --- ΒΟΗΘΗΤΙΚΗ ΜΕΘΟΔΟΣ (Για να μην γράφουμε τον ίδιο κώδικα πολλές φορές) ---
+    // --- ΒΟΗΘΗΤΙΚΗ ΜΕΘΟΔΟΣ ---
     private List<Meal> makeRequest(String url) throws IOException {
         Request request = new Request.Builder().url(url).build();
 
